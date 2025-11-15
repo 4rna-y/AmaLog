@@ -1,0 +1,97 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+generator prismabox {
+    provider = "prismabox"
+    typeboxImportDependencyName = "elysia"
+    typeboxImportVariableName = "t"
+    inputModel = true
+}
+
+model blog {
+    id          String      @id @unique
+    category    String
+    tag         String[]
+    coverImgId  String
+    status      Status
+    title       String
+    content     String[]
+    likes       Int
+    views       Int
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @default(now()) @updatedAt
+
+    blogUpdate blogUpdate[]
+}
+
+enum Status {
+    PUBLISHED
+    ONLYKNOWSURL
+    UNPUBLISHED
+}
+
+model blogUpdate {
+    id          String      @id @unique @default(uuid())
+    blog        blog        @relation(fields: [blogId], references: [id], onDelete: Cascade)
+    blogId      String 
+    title       String
+    createdAt   DateTime    @default(now())
+    contents    blogUpdateContent[]
+}
+
+model blogUpdateContent {
+    id              String      @id @unique @default(uuid())
+    blogUpdate      blogUpdate  @relation(fields: [blogUpdateId], references: [id], onDelete: Cascade)
+    blogUpdateId    String
+    type            blogUpdateType
+    line            Int
+    before          String
+    after           String
+}
+
+enum blogUpdateType {
+    CATEGORY
+    TAG
+    COVERIMGID
+    STATUS
+    TITLE
+    CONTENTS
+}
+
+model keyValuePair {
+    key         String      @id @unique
+    value       String
+    updatedAt   DateTime    @updatedAt
+}
+
+model repository {
+    id          String     @id @unique
+    name        String
+    isProduct   Boolean
+    langs       String[]
+    content     String[]
+}
+
+model contact {
+    id          String          @id @default(uuid())
+    name        String     
+    email       String
+    subject     String
+    message     String          
+    ip          String?
+    userAgent   String?         
+    status      ContactStatus   @default(NEW)
+    createdAt   DateTime        @default(now())
+}
+
+enum ContactStatus {
+    NEW
+    READ
+    REPLIED
+}

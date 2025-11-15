@@ -1,0 +1,265 @@
+@import "https://www.nerdfonts.com/assets/css/webfont.css";
+@import "tailwindcss";
+@tailwind utilities;
+
+:root {
+  --background: #1a1b26;
+  --foreground-light: #d5d8e7;
+  --foreground: #a9b1d6;
+  --foreground-dark: #9198b8;
+  --accent-primary-color: #bb9bf7;
+  --accent-secondary-color: #d0bff1;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground-light: var(--foreground-light);
+  --color-foreground: var(--foreground);
+  --color-foreground-dark: var(--foreground-dark);
+  --color-theme: var(--accent-primary-color);
+  --color-accent-primary: var(--accent-primary-color);
+  --color-accent-secondary: var(--accent-secondary-color);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1b26;
+    --foreground-light: #d5d8e7;
+    --foreground: #a9b1d6;
+    --foreground-dark: #9198b8;
+    --accent-primary-color: #bb9bf7;
+    --accent-secondary-color: #d0bff1;
+  }
+}
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-ExtraLight.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-Light.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-SemiLight.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-SemiBold.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-ExtraLightItalic.ttf") format("truetype");
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-LightItalic.ttf") format("truetype");
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-SemiLightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "CaskaydiaMono Nerd Font";
+  src: url("../public/fonts/CaskaydiaMonoNerdFontMono-BoldItalic.ttf") format("truetype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "CaskaydiaMono Nerd Font";
+}
+
+.markdown {
+  @apply text-foreground-light leading-normal break-words text-lg;
+}
+
+.markdown hr {
+  @apply my-4;
+}
+
+.markdown > * + * {
+  @apply mt-0 mb-4;
+}
+
+.markdown li + li {
+  @apply mt-1;
+}
+
+.markdown li > p + p {
+  @apply mt-6;
+}
+
+.markdown strong {
+  @apply font-semibold;
+}
+
+.markdown a {
+  @apply text-accent-primary font-semibold;
+}
+
+.markdown strong a {
+  @apply font-bold;
+}
+
+.markdown h1 {
+  @apply leading-tight text-4xl font-semibold mb-4 mt-6 pb-2;
+}
+
+.markdown h2 {
+  @apply leading-tight text-2xl font-semibold mb-4 mt-6 pb-2 mx-1;
+}
+
+.markdown h3 {
+  @apply leading-snug text-lg font-semibold mb-4 mt-6 mx-2;
+}
+
+.markdown h4 {
+  @apply leading-none text-base font-semibold mb-4 mt-6 mx-3;
+}
+
+.markdown h5 {
+  @apply leading-tight text-sm font-semibold mb-4 mt-6;
+}
+
+.markdown h6 {
+  @apply leading-tight text-xs font-semibold mb-4 mt-6;
+}
+
+.markdown blockquote {
+  @apply text-base border-l-4 border-gray-300 pl-4 pr-4 text-gray-600;
+}
+
+.markdown code {
+  @apply font-mono text-sm inline bg-gray-800 rounded px-2 py-2;
+}
+
+.markdown p {
+  @apply text-foreground-light px-4 text-lg my-2;
+}
+
+.markdown pre {
+  @apply bg-gray-800 rounded px-4 py-2 mx-4;
+}
+
+.markdown pre code {
+  @apply block bg-transparent p-0 overflow-visible rounded-none;
+}
+
+.markdown ul {
+  @apply text-base pl-8 list-disc;
+}
+
+.markdown ol {
+  @apply text-base pl-10 list-decimal;
+}
+
+.markdown ol > li > p {
+  @apply px-0
+}
+
+.markdown kbd {
+  @apply text-xs inline-block rounded border px-1 py-5 align-middle font-normal font-mono shadow;
+}
+
+.markdown table {
+  @apply text-base border-gray-600 mx-4;
+}
+
+.markdown th {
+  @apply border py-1 px-4;
+}
+
+.markdown td {
+  @apply border py-1 px-4;
+}
+
+.markdown .highlight pre {
+  @apply bg-gray-500;
+}
+
+.toc-container {
+  @apply max-h-screen overflow-y-auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-secondary-color) transparent;
+}
+
+.toc-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toc-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+  background-color: var(--accent-secondary-color);
+  border-radius: 3px;
+}
+
+.toc-title {
+  @apply text-foreground-light border-b border-foreground-light/20 pb-2;
+}
+
+.toc-list {
+  @apply list-none;
+}
+
+.toc-link {
+  @apply no-underline transition-all duration-200;
+}
+
+.toc-link-active {
+  border-left: 2px solid var(--accent-secondary-color);
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  scroll-margin-top: 2rem;
+}
