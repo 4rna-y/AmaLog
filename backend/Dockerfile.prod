@@ -1,0 +1,48 @@
+FROM oven/bun:1-alpine AS deps
+
+WORKDIR /app
+
+COPY package.json bun.lockb* ./
+
+RUN bun install --frozen-lockfile --production
+
+FROM oven/bun:1-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN bun run prisma generate
+
+FROM oven/bun:1-alpine AS runner
+
+WORKDIR /app
+
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata
+
+ENV TZ=Asia/Tokyo
+
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S bunuser -u 1001
+
+COPY --from=builder --chown=bunuser:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=bunuser:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=bunuser:nodejs /app/src ./src
+COPY --from=builder --chown=bunuser:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=bunuser:nodejs /app/tsconfig.json ./tsconfig.json
+
+COPY --from=builder --chown=bunuser:nodejs /app/fonts ./fonts
+
+RUN mkdir -p uploads && chown bunuser:nodejs uploads
+
+USER bunuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD bun run -e 'fetch("http://localhost:8000/health").then(r => r.ok ? process.exit(0) : process.exit(1)).catch(() => process.exit(1))'
+
+CMD ["bun", "run", "src/index.ts"]
