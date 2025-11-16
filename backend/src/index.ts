@@ -17,6 +17,7 @@ const app = new Elysia()
     credentials: true,
   }))
   .use(swagger())
+  .get("/health", () => ({ status: "ok", timestamp: new Date().toISOString() }))
   .use(authController)
   .use(blogController)
   .use(imgController)
