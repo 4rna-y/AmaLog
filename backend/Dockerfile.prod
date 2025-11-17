@@ -25,20 +25,17 @@ RUN apk add --no-cache \
 
 ENV TZ=Asia/Tokyo
 
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S bunuser -u 1001
+COPY --from=builder --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=builder --chown=bun:bun /app/prisma ./prisma
+COPY --from=builder --chown=bun:bun /app/src ./src
+COPY --from=builder --chown=bun:bun /app/package.json ./package.json
+COPY --from=builder --chown=bun:bun /app/tsconfig.json ./tsconfig.json
 
-COPY --from=builder --chown=bunuser:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=bunuser:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=bunuser:nodejs /app/src ./src
-COPY --from=builder --chown=bunuser:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=bunuser:nodejs /app/tsconfig.json ./tsconfig.json
+COPY --from=builder --chown=bun:bun /app/fonts ./fonts
 
-COPY --from=builder --chown=bunuser:nodejs /app/fonts ./fonts
+RUN mkdir -p uploads && chown bun:bun uploads
 
-RUN mkdir -p uploads && chown bunuser:nodejs uploads
-
-USER bunuser
+USER bun
 
 EXPOSE 8000
 

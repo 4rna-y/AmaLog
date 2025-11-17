@@ -29,13 +29,10 @@ RUN apk add --no-cache \
 ENV TZ=Asia/Tokyo
 ENV NODE_ENV=production
 
-RUN addgroup -g 1001 -S bunuser && \
-    adduser -S bunuser -u 1001
+COPY --from=builder --chown=bun:bun /app/.next/standalone ./
+COPY --from=builder --chown=bun:bun /app/.next/static ./.next/static
 
-COPY --from=builder --chown=bunuser:bunuser /app/.next/standalone ./
-COPY --from=builder --chown=bunuser:bunuser /app/.next/static ./.next/static
-
-USER bunuser
+USER bun
 
 EXPOSE 3000
 
