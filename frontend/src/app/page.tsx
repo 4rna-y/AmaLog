@@ -5,7 +5,7 @@ import { BlogApi } from "@/api/blog"
 import Link from "next/link";
 import Footer from "@/components/common/Footer";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
 

@@ -18,6 +18,8 @@ const langName2IconCode = (value: string) => {
     }
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function RepositoryPage({params}: {params: {id: string}}) {
     const { id } = await params;
     const repository = await RepositoryApi.getRepository(id);

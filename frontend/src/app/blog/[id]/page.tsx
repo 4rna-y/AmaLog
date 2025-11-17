@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     };
 }
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPage({params}: {params: {id: string}}) {
     const { id } = await params;

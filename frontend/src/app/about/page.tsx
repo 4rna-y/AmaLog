@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description: 'Ama-Logの管理人のページ',
 };
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export default function About()
 {

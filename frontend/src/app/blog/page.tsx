@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     description: 'Ama-Logのブログ一覧',
 };
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function Blog({ searchParams }: { searchParams: { tag?: string } })
 {
