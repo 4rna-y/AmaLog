@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "backend",
         port: "8000"
+      },
+      {
+        protocol: "https",
+        hostname: "arnay.net"
       }
     ]
   },
