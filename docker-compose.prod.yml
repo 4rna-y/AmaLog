@@ -46,13 +46,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
-        NEXT_PUBLIC_BACKEND_ENDPOINT: ${NEXT_PUBLIC_BACKEND_ENDPOINT:-http://localhost:8000}
+        NEXT_PUBLIC_BACKEND_ENDPOINT: http://backend:8000
     container_name: production-frontend
     restart: unless-stopped
     depends_on:
       - backend
     environment:
-      - NEXT_PUBLIC_BACKEND_ENDPOINT=${NEXT_PUBLIC_BACKEND_ENDPOINT:-http://localhost:8000}
+      - NEXT_PUBLIC_BACKEND_ENDPOINT=https://arnay.net/api
     networks:
       - app-network
     healthcheck:
