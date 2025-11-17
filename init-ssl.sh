@@ -1,9 +1,6 @@
 #!/bin/bash
 
-set -e
-
-DOMAIN=$1
-EMAIL=$2
+EMAIL=$1
 
 sudo certbot certonly \
   --standalone \
@@ -11,8 +8,7 @@ sudo certbot certonly \
   --email $EMAIL \
   --agree-tos \
   --no-eff-email \
-  -d $DOMAIN
+  -d arnay.net \
+  -d portfolio.arnay.net
 
-cp nginx/nginx.conf nginx/nginx.conf.bak
-sed -i "s/DOMAIN_PLACEHOLDER/$DOMAIN/g" nginx/nginx.conf
-
+echo "Complete"
