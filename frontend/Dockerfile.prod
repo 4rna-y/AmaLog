@@ -32,7 +32,6 @@ ENV NODE_ENV=production
 RUN addgroup -g 1001 -S bunuser && \
     adduser -S bunuser -u 1001
 
-COPY --from=builder --chown=bunuser:bunuser /app/public ./public
 COPY --from=builder --chown=bunuser:bunuser /app/.next/standalone ./
 COPY --from=builder --chown=bunuser:bunuser /app/.next/static ./.next/static
 
