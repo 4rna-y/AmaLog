@@ -17,7 +17,7 @@ const KeyValueForm: React.FC<KeyValueFormProps> = ({
     isEdit = false
 }) => {
     const router = useRouter();
-    const [key] = useState(initialKey);
+    const [key, setKey] = useState(initialKey);
     const [value, setValue] = useState(initialValue);
     const [saving, setSaving] = useState(false);
 
@@ -49,8 +49,24 @@ const KeyValueForm: React.FC<KeyValueFormProps> = ({
                 <div className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-foreground-light mb-2">
+                            Key
+                        </label>
+
+                        <input
+                            type="text"
+                            value={key}
+                            onChange={(e) => setKey(e.target.value)}
+                            disabled={isEdit}
+                            placeholder="キーを入力してください"
+                            className="w-full px-4 py-2 bg-background-light border border-foreground-dark/20 rounded text-foreground-light focus:border-accent-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-foreground-light mb-2">
                             Value
                         </label>
+
                         <textarea
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
