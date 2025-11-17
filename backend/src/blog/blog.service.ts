@@ -104,33 +104,56 @@ export const BlogService = {
     },
 
     async create(jwt: any, auth: Cookie<unknown>, body: CreateBlogDto) {
+        console.log(`Blog create: Starting request for id="${body.id}"`);
+
         const res = await AuthModule.verify(jwt, auth);
-        if (!res) return status(403);
+        if (!res) {
+            console.log("Blog create: Authentication failed");
+            return status(403);
+        }
 
-        const existing = await prisma.blog.count({ where: { id: { equals: body.id } } });
-        if (existing !== 0) return status(400);
+        try {
+            console.log(`Blog create: Checking if blog id="${body.id}" already exists`);
+            const existing = await prisma.blog.count({ where: { id: { equals: body.id } } });
+            if (existing !== 0) {
+                console.error(`Error: Blog create failed - Blog id="${body.id}" already exists`);
+                return status(400);
+            }
 
-        await prisma.blog.create({ 
-            data: {
-                id: body.id,
-                category: body.category,
-                tag: body.tag,
-                coverImgId: body.coverImgId,
-                status: body.status,
-                title: body.title,
-                content: body.content,
-                likes: 0,
-                views: 0,
-            } 
-        });
+            console.log(`Blog create: Creating blog id="${body.id}", title="${body.title}"`);
+            await prisma.blog.create({
+                data: {
+                    id: body.id,
+                    category: body.category,
+                    tag: body.tag,
+                    coverImgId: body.coverImgId,
+                    status: body.status,
+                    title: body.title,
+                    content: body.content,
+                    likes: 0,
+                    views: 0,
+                }
+            });
 
-        return status(200);
+            console.log(`Blog create: Successfully created blog id="${body.id}"`);
+            return status(200);
+        }
+        catch (err) {
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            console.error(`Error: Blog create failed for id="${body.id}" - ${errorMessage}`);
+            return status(500);
+        }
     },
 
     async patch(jwt: any, auth: Cookie<unknown>, body: PatchBlogContentDto) {
+        console.log(`Blog patch: Starting request for id="${body.id}"`);
+
         const res = await AuthModule.verify(jwt, auth);
-        if (!res) return status(403);
-        
+        if (!res) {
+            console.log("Blog patch: Authentication failed");
+            return status(403);
+        }
+
         try {
             const txres = await prisma.$transaction(async (tx) => {
                 const target = await tx.blog.findUnique({
@@ -289,7 +312,8 @@ export const BlogService = {
             return txres;
         }
         catch (err) {
-            console.error("Failed to modify blog: ", err);
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            console.error(`Error: Blog patch failed for id="${body.id}" - ${errorMessage}`);
             return status(500);
         }
     }

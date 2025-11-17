@@ -17,28 +17,51 @@ export const RepositoryService = {
     },
 
     async post(jwt: any, auth: Cookie<unknown>, body: PostRepositoryDto) {
+        console.log(`Repository post: Starting request for id="${body.id}"`);
+
         const res = await AuthModule.verify(jwt, auth);
-        if (!res) return status(403);
+        if (!res) {
+            console.log("Repository post: Authentication failed");
+            return status(403);
+        }
 
-        const existing = await prisma.repository.count({ where: { id: { equals: body.id } } });
-        if (existing !== 0) return status(400);
-
-        await prisma.repository.create({
-            data: {
-                id: body.id,
-                name: body.name,
-                langs: body.langs,
-                isProduct: body.isProduct,
-                content: body.content
+        try {
+            console.log(`Repository post: Checking if repository id="${body.id}" already exists`);
+            const existing = await prisma.repository.count({ where: { id: { equals: body.id } } });
+            if (existing !== 0) {
+                console.error(`Error: Repository post failed - Repository id="${body.id}" already exists`);
+                return status(400);
             }
-        });
 
-        return status(200);
+            console.log(`Repository post: Creating repository id="${body.id}", name="${body.name}"`);
+            await prisma.repository.create({
+                data: {
+                    id: body.id,
+                    name: body.name,
+                    langs: body.langs,
+                    isProduct: body.isProduct,
+                    content: body.content
+                }
+            });
+
+            console.log(`Repository post: Successfully created repository id="${body.id}"`);
+            return status(200);
+        }
+        catch (err) {
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            console.error(`Error: Repository post failed for id="${body.id}" - ${errorMessage}`);
+            return status(500);
+        }
     },
 
     async patch(jwt: any, auth: Cookie<unknown>, body: PatchRepositoryDto) {
+        console.log(`Repository patch: Starting request for id="${body.id}"`);
+
         const res = await AuthModule.verify(jwt, auth);
-        if (!res) return status(403);
+        if (!res) {
+            console.log("Repository patch: Authentication failed");
+            return status(403);
+        }
 
         try {
             const txres = await prisma.$transaction(async (tx) => {
@@ -123,7 +146,8 @@ export const RepositoryService = {
             return txres;
         }
         catch (err) {
-            console.error("Failed to modify repository: ", err);
+            const errorMessage = err instanceof Error ? err.message : String(err);
+            console.error(`Error: Repository patch failed for id="${body.id}" - ${errorMessage}`);
             return status(500);
         }
     }
