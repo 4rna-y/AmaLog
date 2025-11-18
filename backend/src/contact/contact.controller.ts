@@ -1,7 +1,6 @@
 import Elysia from "elysia";
 import { ContactService } from "./contact.service";
 import { contactModels } from "./contact.model";
-import { contact } from "../../prisma/prismabox/contact";
 import jwt from "@elysiajs/jwt";
 import { rateLimit } from "elysia-rate-limit";
 
