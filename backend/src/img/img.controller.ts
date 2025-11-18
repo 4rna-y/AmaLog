@@ -8,13 +8,9 @@ export const imgController = new Elysia()
     .use(jwt({ name: "jwt", secret: process.env.JWT_SECRET!! }))
     .use(imgModels)
     .use(staticPlugin({
-        assets: "./uploads",
+        assets: "/app/uploads",
         prefix: "/static",
-        etag: true,
-        headers: {
-            "Cache-Control": "public, max-age=31536000",
-            "ETag": "true"
-        }
+        alwaysStatic: true
     }))
     .decorate({ "img": ImgService })
     .post("/img", async ({ img, jwt, cookie: { auth }, query, body }) =>
