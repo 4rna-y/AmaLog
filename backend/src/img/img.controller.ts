@@ -4,11 +4,13 @@ import { imgModels } from "./img.model";
 import { ImgService } from "./img.service";
 import staticPlugin from "@elysiajs/static";
 
+const uploadsPath = process.env.NODE_ENV === "production" ? "/app/uploads" : "./uploads";
+
 export const imgController = new Elysia()
     .use(jwt({ name: "jwt", secret: process.env.JWT_SECRET!! }))
     .use(imgModels)
     .use(staticPlugin({
-        assets: "/app/uploads",
+        assets: uploadsPath,
         prefix: "/static",
         alwaysStatic: true
     }))
