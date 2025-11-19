@@ -51,8 +51,8 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-    environment:
-      - NEXT_PUBLIC_BACKEND_ENDPOINT=https://arnay.net/api
+    env_file:
+      - ./frontend/.env
     networks:
       - app-network
     healthcheck:
