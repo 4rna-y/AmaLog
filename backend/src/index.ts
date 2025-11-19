@@ -9,7 +9,6 @@ import { contactController } from "./contact/contact.controller";
 import { rateLimit } from "elysia-rate-limit";
 import cors from "@elysiajs/cors";
 
-
 const app = new Elysia()
   .use(rateLimit({ max: 100, duration: 60000 }))
   .use(cors({

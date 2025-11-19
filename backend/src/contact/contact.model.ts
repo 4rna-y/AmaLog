@@ -5,7 +5,8 @@ const submitContactDto = t.Object({
     email: t.String({ format: "email", maxLength: 255 }),
     subject: t.String({ minLength: 1, maxLength: 500 }),
     message: t.String({ minLength: 1, maxLength: 5000 }),
-    website: t.Optional(t.String())
+    website: t.Optional(t.String()),
+    turnstileToken: t.String({ minLength: 1 })
 });
 
 const contactResponse = t.Object({

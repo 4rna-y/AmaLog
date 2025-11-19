@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Turnstile from 'react-turnstile';
 import TUIButton from '@/components/common/TUIButton';
 import Footer from '@/components/common/Footer';
 
@@ -12,6 +13,7 @@ export default function Contact() {
         message: '',
         website: ''
     });
+    const [turnstileToken, setTurnstileToken] = useState<string>('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,15 +26,21 @@ export default function Contact() {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    ...formData,
+                    turnstileToken
+                })
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                throw new Error('送信に失敗しました');
+                throw new Error(result.message || '送信に失敗しました');
             }
 
             setStatus('success');
             setFormData({ name: '', email: '', subject: '', message: '', website: '' });
+            setTurnstileToken('');
         } catch (err) {
             setStatus('error');
             setErrorMessage(err instanceof Error ? err.message : '送信に失敗しました');
@@ -132,8 +140,17 @@ export default function Contact() {
                                 </div>
                             )}
 
+                            <div className="flex justify-center">
+                                <Turnstile
+                                    sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                                    onVerify={(token) => setTurnstileToken(token)}
+                                    onError={() => setTurnstileToken('')}
+                                    onExpire={() => setTurnstileToken('')}
+                                />
+                            </div>
+
                             <TUIButton
-                                disabled={status === 'loading'}
+                                disabled={status === 'loading' || !turnstileToken}
                                 className="w-full"
                             >
                                 {status === 'loading' ? '送信中...' : '送信する'}
