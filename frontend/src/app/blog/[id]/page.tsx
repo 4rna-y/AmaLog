@@ -36,6 +36,17 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
         };
     }
 
+    if (blog.status === "UNPUBLISHED" || blog.status === "ONLYKNOWSURL") {
+        return {
+            title: "Ama-Log",
+            description: "Ama's personal blog",
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
+
     const description = extractTextFromContent(blog.content);
     const ogImageUrl = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/static/${blog.coverImgId}`;
 
@@ -95,7 +106,7 @@ export default async function BlogPage({params}: {params: {id: string}}) {
     const description = extractTextFromContent(blog.content);
     const ogImageUrl = `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/static/${blog.coverImgId}`;
 
-    const jsonLd = {
+    const jsonLd = blog.status === "PUBLISHED" ? {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": blog.title,
@@ -122,14 +133,16 @@ export default async function BlogPage({params}: {params: {id: string}}) {
             "@type": "WebPage",
             "@id": `https://arnay.net/blog/${blog.id}`
         }
-    };
+    } : null;
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            {jsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+            )}
             {isOnlyKnowsUrl && (
                 <div className="fixed inset-0 border-2 border-yellow-500/75 pointer-events-none z-50" style={{ boxShadow: "inset 0 0 15px rgba(234, 179, 8, 0.3)" }} />
             )}
