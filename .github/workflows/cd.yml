@@ -24,4 +24,4 @@ jobs:
           script: |
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull origin main
-            docker compose up --build -d --force-recreate
+            docker compose -f docker-compose.prod.yml up --build -d --force-recreate
