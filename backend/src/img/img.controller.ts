@@ -12,7 +12,6 @@ export const imgController = new Elysia()
     .use(staticPlugin({
         assets: uploadsPath,
         prefix: "/static",
-        alwaysStatic: true
     }))
     .decorate({ "img": ImgService })
     .post("/img", async ({ img, jwt, cookie: { auth }, query, body }) =>
