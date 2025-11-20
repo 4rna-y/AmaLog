@@ -21,7 +21,7 @@ describe("Blog Service Tests", () => {
                 coverImgId: "cover123",
                 status: "PUBLISHED",
                 title: "Test Blog Post",
-                content: ["This is test content", "Second line of content"],
+                content: "# Test Blog Post\n\nThis is test content.\n\nSecond line of content.",
                 likes: 0,
                 views: 0
             }
@@ -97,7 +97,7 @@ describe("Blog Service Tests", () => {
                 coverImgId: "cover456",
                 status: "UNPUBLISHED",
                 title: "Unpublished Post",
-                content: ["Content"],
+                content: "# Unpublished Post\n\nThis is unpublished content.",
                 likes: 0,
                 views: 0
             }

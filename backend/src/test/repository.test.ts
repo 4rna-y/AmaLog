@@ -31,7 +31,7 @@ describe("Repository Service Tests", () => {
                 name: "Test Repository",
                 isProduct: true,
                 langs: ["TypeScript", "JavaScript"],
-                content: ["Line 1 of content", "Line 2 of content"]
+                content: "# Test Repository\n\nLine 1 of content\n\nLine 2 of content"
             }
         });
 
@@ -40,7 +40,7 @@ describe("Repository Service Tests", () => {
         expect(repository.name).toBe("Test Repository");
         expect(repository.isProduct).toBe(true);
         expect(repository.langs).toEqual(["TypeScript", "JavaScript"]);
-        expect(repository.content).toEqual(["Line 1 of content", "Line 2 of content"]);
+        expect(repository.content).toBe("# Test Repository\n\nLine 1 of content\n\nLine 2 of content");
     });
 
     test("should read a repository", async () => {
@@ -72,11 +72,11 @@ describe("Repository Service Tests", () => {
         const updatedRepo = await testPrisma.repository.update({
             where: { id: testRepoId },
             data: {
-                content: ["Updated line 1", "Updated line 2", "New line 3"]
+                content: "# Updated Repository\n\nUpdated line 1\n\nUpdated line 2\n\nNew line 3"
             }
         });
 
-        expect(updatedRepo.content).toEqual(["Updated line 1", "Updated line 2", "New line 3"]);
+        expect(updatedRepo.content).toBe("# Updated Repository\n\nUpdated line 1\n\nUpdated line 2\n\nNew line 3");
     });
 
     test("should find repositories by isProduct flag", async () => {
@@ -86,7 +86,7 @@ describe("Repository Service Tests", () => {
                 name: "Product Repo",
                 isProduct: true,
                 langs: ["Python"],
-                content: ["Content"]
+                content: "# Product Repo\n\nThis is a product repository."
             }
         });
 
