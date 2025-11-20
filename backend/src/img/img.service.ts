@@ -68,7 +68,7 @@ export const ImgService = {
             fitTo: { mode: "width", value: 1200 }
         });
 
-        await Bun.write(`./uploads/${blog.coverImgId}`, resvg.render().asPng());
+        await Bun.write(`./uploads/${blog.coverImgId}`, resvg.render().asPng(), { createPath: true });
 
         return status(200);
     },
@@ -87,7 +87,7 @@ export const ImgService = {
             if (!imageResponse.ok) return status(500);
 
             const imageBuffer = await imageResponse.arrayBuffer();
-            await Bun.write(`./uploads/${body.repositoryId}.png`, imageBuffer);
+            await Bun.write(`./uploads/${body.repositoryId}.png`, imageBuffer, { createPath: true });
 
             return status(200);
         } catch (err) {
