@@ -9,36 +9,28 @@ export interface HeadingTree {
     children: Heading[];
 }
 
-export function extractHeadings(content: string[]): Heading[] {
+export function extractHeadings(content: string): Heading[] {
     const headings: Heading[] = [];
+    const headingRegex = /^(#{1,3})\s+(.+)$/gm;
+    let headingMatch;
 
-    content.forEach((item) => {
-        const match = item.match(/^md\(([\s\S]*)\)$/);
-        if (!match) return;
+    while ((headingMatch = headingRegex.exec(content)) !== null) {
+        const level = headingMatch[1].length;
+        const text = headingMatch[2].trim();
 
-        const markdown = match[1];
+        const id = text
+            .toLowerCase()
+            .replace(/[^a-z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .trim();
 
-        const headingRegex = /^(#{1,3})\s+(.+)$/gm;
-        let headingMatch;
-
-        while ((headingMatch = headingRegex.exec(markdown)) !== null) {
-            const level = headingMatch[1].length;
-            const text = headingMatch[2].trim();
-
-            const id = text
-                .toLowerCase()
-                .replace(/[^a-z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-                .trim();
-
-            headings.push({
-                id: id || `heading-${headings.length}`,
-                text,
-                level,
-            });
-        }
-    });
+        headings.push({
+            id: id || `heading-${headings.length}`,
+            text,
+            level,
+        });
+    }
 
     return headings;
 }

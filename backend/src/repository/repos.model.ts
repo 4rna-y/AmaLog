@@ -9,7 +9,7 @@ const postRepositoryDto = t.Object({
     name: t.String(),
     langs: t.Array(t.String()),
     isProduct: t.Boolean(),
-    content: t.Array(t.String())
+    content: t.String()
 });
 
 const patchRepositoryContent = t.Object({

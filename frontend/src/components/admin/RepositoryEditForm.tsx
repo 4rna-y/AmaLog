@@ -12,7 +12,7 @@ interface RepositoryEditFormProps {
         name: string;
         isProduct: boolean;
         langs: string[];
-        content: string[];
+        content: string;
     };
 }
 
@@ -22,7 +22,7 @@ const RepositoryEditForm: React.FC<RepositoryEditFormProps> = ({ repository }) =
     const [isProduct, setIsProduct] = useState(repository.isProduct);
     const [langs, setLangs] = useState<string[]>(repository.langs);
     const [newLang, setNewLang] = useState("");
-    const [content, setContent] = useState<string>(repository.content.join("\n"));
+    const [content, setContent] = useState<string>(repository.content);
     const [saving, setSaving] = useState(false);
 
     const handleAddLang = () => {
@@ -37,41 +37,18 @@ const RepositoryEditForm: React.FC<RepositoryEditFormProps> = ({ repository }) =
     };
 
     const createPatchPayload = () => {
-        const currentContents = content.split("\n");
-        const patchContents = [];
-        const maxLength = Math.max(repository.content.length, currentContents.length);
-
-        for (let i = 0; i < maxLength; i++) {
-            const original = repository.content[i];
-            const current = currentContents[i];
-
-            if (original === undefined && current !== undefined) {
-                patchContents.push({
-                    line: i,
-                    content: current,
-                    delete: null
-                });
-            } else if (original !== undefined && current === undefined) {
-                patchContents.push({
-                    line: i,
-                    content: original,
-                    delete: true
-                });
-            } else if (original !== current) {
-                patchContents.push({
-                    line: i,
-                    content: current,
-                    delete: null
-                });
-            }
-        }
+        const patchContents = content !== repository.content ? [{
+            line: 0,
+            content: content,
+            delete: null
+        }] : null;
 
         return {
             id: repository.id,
             name: name !== repository.name ? name : null,
             isProduct: isProduct !== repository.isProduct ? isProduct : null,
             langs: JSON.stringify(langs) !== JSON.stringify(repository.langs) ? langs : null,
-            content: patchContents.length > 0 ? patchContents : null
+            content: patchContents
         };
     };
 
@@ -187,9 +164,7 @@ const RepositoryEditForm: React.FC<RepositoryEditFormProps> = ({ repository }) =
                                 ))}
                             </div>
                             <div className="prose prose-lg max-w-none text-foreground-light whitespace-pre-wrap">
-                                {content.split('\n').map((paragraph, index) => (
-                                    <BlogContentItem key={index} rawText={paragraph} />
-                                ))}
+                                <BlogContentItem content={content} />
                             </div>
                         </div>
                     </div>

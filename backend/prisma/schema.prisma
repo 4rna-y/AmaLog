@@ -21,7 +21,7 @@ model blog {
     coverImgId  String
     status      Status
     title       String
-    content     String[]
+    content     String
     likes       Int
     views       Int
     createdAt   DateTime    @default(now())
@@ -75,7 +75,7 @@ model repository {
     name        String
     isProduct   Boolean
     langs       String[]
-    content     String[]
+    content     String
 }
 
 model contact {

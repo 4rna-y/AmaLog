@@ -35,13 +35,12 @@ const RepositoryCreateForm: React.FC = () => {
 
         setSaving(true);
         try {
-            const contentArray = content.split('\n');
             const payload = {
                 id: id.trim(),
                 name,
                 isProduct,
                 langs,
-                content: contentArray
+                content: content
             };
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/repos`, {
@@ -187,9 +186,7 @@ const RepositoryCreateForm: React.FC = () => {
                                 ))}
                             </div>
                             <div className="prose prose-lg max-w-none text-foreground-light whitespace-pre-wrap">
-                                {content.split('\n').map((paragraph, index) => (
-                                    <BlogContentItem key={index} rawText={paragraph} />
-                                ))}
+                                <BlogContentItem content={content} />
                             </div>
                         </div>
                     </div>

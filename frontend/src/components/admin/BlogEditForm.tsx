@@ -13,7 +13,7 @@ interface BlogEditFormProps {
         category: string;
         status: string;
         tag: string[];
-        content: string[];
+        content: string;
         coverImgId: string;
         createdAt: string;
         updatedAt: string;
@@ -29,7 +29,7 @@ const BlogEditForm: React.FC<BlogEditFormProps> = ({ blog }) => {
     const [status, setStatus] = useState(blog.status);
     const [tags, setTags] = useState<string[]>(blog.tag);
     const [newTag, setNewTag] = useState("");
-    const [content, setContent] = useState<string>(blog.content.join("\n"));
+    const [content, setContent] = useState<string>(blog.content);
     const [saving, setSaving] = useState(false);
 
     const handleAddTag = () => {
@@ -44,34 +44,11 @@ const BlogEditForm: React.FC<BlogEditFormProps> = ({ blog }) => {
     };
 
     const createPatchPayload = () => {
-        const currentContents = content.split("\n");
-        const patchContents = [];
-        const maxLength = Math.max(blog.content.length, currentContents.length);
-
-        for (let i = 0; i < maxLength; i++) {
-            const original = blog.content[i];
-            const current = currentContents[i];
-
-            if (original === undefined && current !== undefined) {
-                patchContents.push({
-                    line: i,
-                    content: current,
-                    delete: null
-                });
-            } else if (original !== undefined && current === undefined) {
-                patchContents.push({
-                    line: i,
-                    content: original,
-                    delete: true
-                });
-            } else if (original !== current) {
-                patchContents.push({
-                    line: i,
-                    content: current,
-                    delete: null
-                });
-            }
-        }
+        const patchContents = content !== blog.content ? [{
+            line: 0,
+            content: content,
+            delete: null
+        }] : null;
 
         return {
             id: blog.id,
@@ -81,7 +58,7 @@ const BlogEditForm: React.FC<BlogEditFormProps> = ({ blog }) => {
             coverImgId: null,
             status: status !== blog.status ? status : null,
             title: title !== blog.title ? title : null,
-            contents: patchContents.length > 0 ? patchContents : null
+            contents: patchContents
         };
     };
 
@@ -191,7 +168,7 @@ const BlogEditForm: React.FC<BlogEditFormProps> = ({ blog }) => {
                         <MarkdownEditor
                             value={content}
                             onChange={setContent}
-                            placeholder="md(マークダウン) または img(image.png, キャプション) 改行で段落を区切ります"
+                            placeholder="Markdownを入力してください"
                         />
                     </div>
                 </div>
@@ -212,9 +189,7 @@ const BlogEditForm: React.FC<BlogEditFormProps> = ({ blog }) => {
                                 ))}
                             </div>
                             <div className="prose prose-lg max-w-none text-foreground-light">
-                                {content.split("\n").map((paragraph, index) => (
-                                    <BlogContentItem key={index} rawText={paragraph} />
-                                ))}
+                                <BlogContentItem content={content} />
                             </div>
                         </div>
                     </div>

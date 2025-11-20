@@ -42,14 +42,13 @@ const BlogCreateForm: React.FC = () => {
 
         setSaving(true);
         try {
-            const contentArray = content.split("\n");
             const payload = {
                 id: id.trim(),
                 title,
                 category,
                 status,
                 tag: tags,
-                content: contentArray,
+                content: content,
                 coverImgId: coverImgId
             };
 
@@ -204,7 +203,7 @@ const BlogCreateForm: React.FC = () => {
                         <MarkdownEditor
                             value={content}
                             onChange={setContent}
-                            placeholder="md(マークダウン) または img(image.png, キャプション)"
+                            placeholder="Markdownを入力してください"
                         />
                     </div>
                 </div>
@@ -226,9 +225,7 @@ const BlogCreateForm: React.FC = () => {
                                 ))}
                             </div>
                             <div className="prose prose-lg max-w-none text-foreground-light">
-                                {content.split("\n").map((paragraph, index) => (
-                                    <BlogContentItem key={index} rawText={paragraph} />
-                                ))}
+                                <BlogContentItem content={content} />
                             </div>
                         </div>
                         

@@ -13,15 +13,9 @@ import { cookies } from "next/headers";
 import { Tooltip } from "@/components/common/Tooltip";
 import { Metadata } from "next";
 
-function extractTextFromContent(content: string[]): string {
-    let text = "";
-    for (const line of content) {
-        if (line.startsWith("md(") && line.endsWith(")")) {
-            const mdContent = line.slice(3, -1);
-            text += mdContent.replace(/[#*`_\[\]]/g, "") + " ";
-        }
-    }
-    return text.trim().slice(0, 20);
+function extractTextFromContent(content: string): string {
+    const text = content.replace(/[#*`_\[\]]/g, "").replace(/!\[.*?\]\(.*?\)/g, "");
+    return text.trim().slice(0, 200);
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -201,9 +195,7 @@ export default async function BlogPage({params}: {params: {id: string}}) {
                         </header>
 
                         <div className="prose prose-lg max-w-none text-foreground-light">
-                            {blog.content.map((paragraph, index) => (
-                                <BlogContentItem key={index} rawText={paragraph}/>
-                            ))}
+                            <BlogContentItem content={blog.content} />
                         </div>
 
                         <div className="mt-12 pt-8 border-t border-foreground-light/20">

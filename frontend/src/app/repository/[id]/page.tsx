@@ -73,9 +73,7 @@ export default async function RepositoryPage({params}: {params: {id: string}}) {
                         </header>
 
                         <div className="prose prose-lg max-w-none text-foreground-light">
-                            {repository.content?.map((paragraph, index) => (
-                                <BlogContentItem key={index} rawText={paragraph}/>
-                            ))}
+                            <BlogContentItem content={repository.content}/>
                         </div>
 
                         <div className="mt-12 pt-8 border-t border-foreground-light/20">

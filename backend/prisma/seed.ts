@@ -15,47 +15,157 @@ async function main() {
       coverImgId: 'test-0.png',
       status: 'PUBLISHED',
       title: 'Markdown機能テスト - 全機能一覧',
-      content: [
-        'md(# Markdownの見出し\n\nこの記事では、Markdownの全機能をテストします。)',
+      content: `# Markdownの見出し
 
-        'md(## 見出しレベル2\n### 見出しレベル3\n#### 見出しレベル4\n##### 見出しレベル5\n###### 見出しレベル6)',
+この記事では、Markdownの全機能をテストします。
 
-        'md(---)',
+## 見出しレベル2
+### 見出しレベル3
+#### 見出しレベル4
+##### 見出しレベル5
+###### 見出しレベル6
 
-        'md(## テキスト装飾\n\n**太字のテキスト**\n\n*斜体のテキスト*\n\n***太字かつ斜体***\n\n~~取り消し線~~\n\n`インラインコード`)',
+---
 
-        'md(---)',
+## テキスト装飾
 
-        'md(## リスト\n\n### 順序なしリスト\n\n- アイテム1\n- アイテム2\n  - ネストされたアイテム2-1\n  - ネストされたアイテム2-2\n- アイテム3\n\n### 順序付きリスト\n\n1. 最初のアイテム\n2. 2番目のアイテム\n3. 3番目のアイテム\n   1. ネストされたアイテム3-1\n   2. ネストされたアイテム3-2)',
+**太字のテキスト**
 
-        'md(---)',
+*斜体のテキスト*
 
-        'md(## チェックボックス\n\n- [x] 完了したタスク\n- [ ] 未完了のタスク\n- [ ] 別の未完了タスク)',
+***太字かつ斜体***
 
-        'md(---)',
+~~取り消し線~~
 
-        'md(## リンク\n\n[通常のリンク](https://example.com)\n\n[タイトル付きリンク](https://example.com "リンクのタイトル")\n\nURL: https://example.com)',
+\`インラインコード\`
 
-        'md(---)',
+---
 
-        'md(## 引用\n\n> これは引用ブロックです。\n> 複数行にわたって書くこともできます。\n>\n> > ネストされた引用もサポートしています。)',
+## リスト
 
-        'md(---)',
+### 順序なしリスト
 
-        'md(## コードブロック\n\n### JavaScriptのコード\n\n```javascript\nfunction greet(name) {\n  console.log(`Hello, ${name}!`);\n  return name.toUpperCase();\n}\n\ngreet("World");\n```\n\n### TypeScriptのコード\n\n```typescript\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nconst user: User = {\n  id: 1,\n  name: "John Doe",\n  email: "john@example.com"\n};\n```\n\n### Pythonのコード\n\n```python\ndef fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\nprint(fibonacci(10))\n```)',
+- アイテム1
+- アイテム2
+  - ネストされたアイテム2-1
+  - ネストされたアイテム2-2
+- アイテム3
 
-        'md(---)',
+### 順序付きリスト
 
-        'md(## テーブル\n\n| 項目 | 説明 | 価格 |\n|------|------|------:|\n| リンゴ | 赤くて美味しい果物 | ¥100 |\n| バナナ | 黄色い果物 | ¥80 |\n| オレンジ | オレンジ色の柑橘類 | ¥120 |\n\n### 配置を変えたテーブル\n\n| 左寄せ | 中央寄せ | 右寄せ |\n|:-------|:-------:|-------:|\n| Left | Center | Right |\n| A | B | C |)',
+1. 最初のアイテム
+2. 2番目のアイテム
+3. 3番目のアイテム
+   1. ネストされたアイテム3-1
+   2. ネストされたアイテム3-2
 
-        'md(---)',
+---
 
-        'img(test-0.png,サンプル画像のキャプション)',
+## チェックボックス
 
-        'md(---)',
+- [x] 完了したタスク
+- [ ] 未完了のタスク
+- [ ] 別の未完了タスク
 
-        'md(## まとめ\n\nこれでMarkdownの主要な機能をすべて確認できました。\n\n- 見出し\n- テキスト装飾\n- リスト\n- チェックボックス\n- リンク\n- 引用\n- コードブロック\n- テーブル\n- 画像\n\nすべて正しく表示されていれば成功です！)'
-      ],
+---
+
+## リンク
+
+[通常のリンク](https://example.com)
+
+[タイトル付きリンク](https://example.com "リンクのタイトル")
+
+URL: https://example.com
+
+---
+
+## 引用
+
+> これは引用ブロックです。
+> 複数行にわたって書くこともできます。
+>
+> > ネストされた引用もサポートしています。
+
+---
+
+## コードブロック
+
+### JavaScriptのコード
+
+\`\`\`javascript
+function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+  return name.toUpperCase();
+}
+
+greet("World");
+\`\`\`
+
+### TypeScriptのコード
+
+\`\`\`typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const user: User = {
+  id: 1,
+  name: "John Doe",
+  email: "john@example.com"
+};
+\`\`\`
+
+### Pythonのコード
+
+\`\`\`python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(10))
+\`\`\`
+
+---
+
+## テーブル
+
+| 項目 | 説明 | 価格 |
+|------|------|------:|
+| リンゴ | 赤くて美味しい果物 | ¥100 |
+| バナナ | 黄色い果物 | ¥80 |
+| オレンジ | オレンジ色の柑橘類 | ¥120 |
+
+### 配置を変えたテーブル
+
+| 左寄せ | 中央寄せ | 右寄せ |
+|:-------|:-------:|-------:|
+| Left | Center | Right |
+| A | B | C |
+
+---
+
+![サンプル画像のキャプション](test-0.png)
+
+---
+
+## まとめ
+
+これでMarkdownの主要な機能をすべて確認できました。
+
+- 見出し
+- テキスト装飾
+- リスト
+- チェックボックス
+- リンク
+- 引用
+- コードブロック
+- テーブル
+- 画像
+
+すべて正しく表示されていれば成功です！`,
       likes: 999,
       views: 9999
     }
@@ -70,12 +180,17 @@ async function main() {
         coverImgId:  `test-${i}.png`,
         status: 'PUBLISHED',
         title:  `Test Article ${i}`,
-        content: [
-          `md(# Test article ${i})`,
-          'md(This is test sample article)',
-          'md(## Section 1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.)',
-          'md(## Section 2\n\n**Bold text** and *italic text* example.)',
-        ],
+        content: `# Test article ${i}
+
+This is test sample article
+
+## Section 1
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Section 2
+
+**Bold text** and *italic text* example.`,
         likes: Math.trunc(Math.random() * 1000),
         views: Math.trunc(Math.random() * 1000)
       }

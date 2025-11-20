@@ -219,66 +219,18 @@ export const BlogService = {
                     });
                 }
 
-                let newContent = [...target.content];
-                if (body.contents) {
-                    for (const item of body.contents) {
-                        if (item.line < 0) return status(400);
-                        if (item.line > target.content.length + 100) return status(400);
-                    }
-
-                    const ops = new Map<number, "delete" | string>();
-                    const additions: string[] = [];
-
-                    body.contents.forEach((item) => {
-                        if (item.line < target.content.length) {
-                            if (item.delete === true) {
-                                ops.set(item.line, "delete");
-                            } else {
-                                ops.set(item.line, item.content);
-                            }
-                        } else {
-                            if (item.delete !== true) {
-                                additions.push(item.content);
-                            }
-                        }
-                    });
-
-                    newContent = [];
-                    for (let i = 0; i < target.content.length; i++) {
-                        const op = ops.get(i);
-
-                        if (op === "delete") {
-                            all.push({
-                                type: "CONTENTS",
-                                line: i,
-                                before: target.content[i],
-                                after: ""
-                            });
-                        } else if (op && op !== "delete") {
-                            if (target.content[i] !== op) {
-                                all.push({
-                                    type: "CONTENTS",
-                                    line: i,
-                                    before: target.content[i],
-                                    after: op
-                                });
-                            }
-                            newContent.push(op);
-                        } else {
-                            newContent.push(target.content[i]);
-                        }
-                    }
-
-                    additions.forEach((content) => {
-                        const line = newContent.length;
-                        newContent.push(content);
+                let newContent = target.content;
+                if (body.contents && body.contents.length > 0) {
+                    const firstContent = body.contents[0];
+                    if (firstContent && firstContent.content !== target.content) {
+                        newContent = firstContent.content;
                         all.push({
                             type: "CONTENTS",
-                            line: line,
-                            before: "",
-                            after: content
+                            line: 0,
+                            before: target.content,
+                            after: newContent
                         });
-                    });
+                    }
                 }
 
                 if (all.length === 0) return status(200);

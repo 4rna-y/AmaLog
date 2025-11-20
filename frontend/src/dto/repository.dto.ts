@@ -3,5 +3,5 @@ export interface IRepositoryModel {
     name: string;
     isProduct: boolean;
     langs: string[];
-    content: string[];
+    content: string;
 }

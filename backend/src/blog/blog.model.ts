@@ -9,7 +9,7 @@ const blog = t.Object({
     coverImgId: t.String(),
     status,
     title: t.String(),
-    content: t.Array(t.String()),
+    content: t.String(),
     likes: t.Integer(),
     views: t.Integer(),
     createdAt: t.Date(),
@@ -28,7 +28,7 @@ const createBlogDto = t.Object({
     coverImgId: t.String(),
     status,
     title: t.String(),
-    content: t.Array(t.String())
+    content: t.String()
 });
 
 const getBlogDto = t.Object({

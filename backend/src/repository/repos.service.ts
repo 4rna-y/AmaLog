@@ -90,47 +90,11 @@ export const RepositoryService = {
                     update.isProduct = body.isProduct;
                 }
 
-                let newContent = [...target.content];
-                if (body.content) {
-                    for (const item of body.content) {
-                        if (item.line < 0) return status(400);
-                        if (item.line > target.content.length + 100) return status(400);
+                if (body.content && body.content.length > 0) {
+                    const firstContent = body.content[0];
+                    if (firstContent && firstContent.content !== target.content) {
+                        update.content = firstContent.content;
                     }
-
-                    const ops = new Map<number, "delete" | string>();
-                    const additions: string[] = [];
-
-                    body.content.forEach((item) => {
-                        if (item.line < target.content.length) {
-                            if (item.delete === true) {
-                                ops.set(item.line, "delete");
-                            } else {
-                                ops.set(item.line, item.content);
-                            }
-                        } else {
-                            if (item.delete !== true) {
-                                additions.push(item.content);
-                            }
-                        }
-                    });
-
-                    newContent = [];
-                    for (let i = 0; i < target.content.length; i++) {
-                        const op = ops.get(i);
-
-                        if (op === "delete") {
-                        } else if (op && op !== "delete") {
-                            newContent.push(op);
-                        } else {
-                            newContent.push(target.content[i]);
-                        }
-                    }
-
-                    additions.forEach((content) => {
-                        newContent.push(content);
-                    });
-
-                    update.content = newContent;
                 }
 
                 if (Object.keys(update).length === 0) return status(200);

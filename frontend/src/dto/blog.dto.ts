@@ -5,7 +5,7 @@ export interface IBlogModel {
     coverImgId: string;
     status: string;
     title: string;
-    content: string[];
+    content: string;
     views: number;
     likes: number;
     createdAt: string;

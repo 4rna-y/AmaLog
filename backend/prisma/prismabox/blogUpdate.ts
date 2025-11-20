@@ -31,7 +31,7 @@ export const blogUpdateRelations = t.Object(
           { additionalProperties: false },
         ),
         title: t.String(),
-        content: t.Array(t.String(), { additionalProperties: false }),
+        content: t.String(),
         likes: t.Integer(),
         views: t.Integer(),
         createdAt: t.Date(),
