@@ -184,11 +184,11 @@ body {
 }
 
 .markdown pre {
-  @apply bg-gray-800 rounded px-4 py-2 mx-4;
+  @apply bg-gray-800 rounded px-4 py-2 mx-4 overflow-x-auto;
 }
 
 .markdown pre code {
-  @apply block bg-transparent p-0 overflow-visible rounded-none;
+  @apply block bg-transparent p-0 rounded-none;
 }
 
 .markdown ul {
