@@ -15,6 +15,8 @@ const mime2Ext: Record<string, string> = {
     "image/avif": ".avif"
 }
 
+const uploadsPath = process.env.NODE_ENV === "production" ? "/app/uploads" : "./uploads";
+
 export const ImgService = {
     async post(jwt: any, auth: Cookie<unknown>, query: GetImgDto, body: PostImgDto) {
         const res = await AuthModule.verify(jwt, auth);
@@ -23,7 +25,7 @@ export const ImgService = {
 
         try {
             const buf = await body.image.arrayBuffer();
-            await Bun.write(`./uploads/${query.id}`, buf, { createPath: true /*わあ！*/ });
+            await Bun.write(`${uploadsPath}/${query.id}`, buf, { createPath: true /*わあ！*/ });
         }
         catch (err) {
             console.error("Failed to save img: ", err);
@@ -68,7 +70,7 @@ export const ImgService = {
             fitTo: { mode: "width", value: 1200 }
         });
 
-        await Bun.write(`./uploads/${blog.coverImgId}`, resvg.render().asPng(), { createPath: true });
+        await Bun.write(`${uploadsPath}/${blog.coverImgId}`, resvg.render().asPng(), { createPath: true });
 
         return status(200);
     },
@@ -87,7 +89,7 @@ export const ImgService = {
             if (!imageResponse.ok) return status(500);
 
             const imageBuffer = await imageResponse.arrayBuffer();
-            await Bun.write(`./uploads/${body.repositoryId}.png`, imageBuffer, { createPath: true });
+            await Bun.write(`${uploadsPath}/${body.repositoryId}.png`, imageBuffer, { createPath: true });
 
             return status(200);
         } catch (err) {
