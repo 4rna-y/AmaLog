@@ -46,7 +46,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
       args:
-        NEXT_PUBLIC_BACKEND_ENDPOINT: https://arnay.net/api
+        NEXT_PUBLIC_BACKEND_ENDPOINT: https://4rnay.net/api
     container_name: production-frontend
     restart: unless-stopped
     depends_on:

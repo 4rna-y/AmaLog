@@ -15,18 +15,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://arnay.net'),
+  metadataBase: new URL('https://4rnay.net'),
   title: {
     default: 'Ama-Log',
     template: '%s | Ama-Log'
   },
   description: 'Ama-Logのトップページ',
-  authors: [{ name: 'Ama', url: 'https://arnay.net' }],
+  authors: [{ name: 'Ama', url: 'https://4rnay.net' }],
   creator: 'Ama',
   openGraph: {
     type: 'website',
     locale: 'ja_JP',
-    url: 'https://arnay.net',
+    url: 'https://4rnay.net',
     siteName: 'Ama-Log',
     title: 'Ama-Log',
     description: 'Ama-Logのトップページ',

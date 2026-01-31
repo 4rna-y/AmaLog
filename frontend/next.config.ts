@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "arnay.net"
+        hostname: "4rnay.net"
       }
     ]
   },

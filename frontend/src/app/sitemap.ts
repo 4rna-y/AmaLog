@@ -4,7 +4,7 @@ import { BlogApi } from '@/api/blog'
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://arnay.net'
+  const baseUrl = 'https://4rnay.net'
 
   const blogs = await BlogApi.getBlogs(1000, 1)
 

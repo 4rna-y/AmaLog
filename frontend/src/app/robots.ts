@@ -5,10 +5,41 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/blog/',
-        disallow: ['/', '/about', '/contact', '/admin/'],
+        allow: [
+          '/blog/',
+          '/repository/',
+          '/about',
+          '/contact',
+        ],
+        disallow: [
+          '/admin/',
+          '/admin/*',
+          '/api/',
+          '/api/*',
+        ],
+      },
+
+      {
+        userAgent: [
+          'GPTBot',            
+          'ChatGPT-User',      
+          'CCBot',               
+          'anthropic-ai',        
+          'Claude-Web',         
+          'cohere-ai',         
+          'AhrefsBot',         
+          'SemrushBot',        
+          'DotBot',         
+          'MJ12bot',             
+          'BLEXBot',            
+          'PetalBot',          
+          'DataForSeoBot',       
+          'Bytespider',          
+          'ia_archiver',      
+        ],
+        disallow: '/',
       },
     ],
-    sitemap: 'https://arnay.net/sitemap.xml',
+    sitemap: 'https://4rnay.net/sitemap.xml',
   }
 }

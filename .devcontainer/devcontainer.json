@@ -1,5 +1,4 @@
 {
-    "name": "node-ts-nextjs",
     "dockerComposeFile": "docker-compose.yml",
     "service": "workspace",
     "customizations": {

@@ -8,7 +8,7 @@ sudo certbot certonly \
   --email $EMAIL \
   --agree-tos \
   --no-eff-email \
-  -d arnay.net \
-  -d portfolio.arnay.net
+  -d 4rnay.net \
+  -d portfolio.4rnay.net
 
 echo "Complete"
