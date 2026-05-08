@@ -1,9 +1,9 @@
 import { Cookie, ElysiaCustomStatusResponse, file, status } from "elysia";
-import { GenerateCoverImageDto, GenerateRepoImageDto, GetImgDto, Img, PostImgDto, } from "./img.model";
-import { AuthModule } from "../auth/auth.module";
-import { prisma } from "../prisma"
+import { GenerateCoverImageDto, GenerateRepoImageDto, GetImgDto, Img, PostImgDto, } from "./img.model.js";
+import { AuthModule } from "../auth/auth.module.js";
+import { prisma } from "../prisma.js"
 import satori from "satori";
-import { imgSvgNode } from "./img.svg";
+import { imgSvgNode } from "./img.svg.js";
 import { Resvg } from "@resvg/resvg-js";
 import { readdirSync, statSync } from "fs";
 

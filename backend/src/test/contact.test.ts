@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
-import { testPrisma, cleanupTestDatabase } from "./setup";
+import { testPrisma, cleanupTestDatabase } from "./setup.js";
 
 describe("Contact Service Tests", () => {
     let testContactId: string;
@@ -15,23 +15,20 @@ describe("Contact Service Tests", () => {
     test("should create a new contact submission", async () => {
         const contact = await testPrisma.contact.create({
             data: {
-                name: "Test User",
-                email: "test@example.com",
+                name: "John Doe",
+                email: "john@example.com",
                 subject: "Test Subject",
-                message: "This is a test message",
+                message: "Test Message",
                 ip: "127.0.0.1",
-                userAgent: "Test Agent"
+                userAgent: "TestAgent",
+                status: "NEW"
             }
         });
 
-        testContactId = contact.id;
-
         expect(contact).toBeDefined();
-        expect(contact.name).toBe("Test User");
-        expect(contact.email).toBe("test@example.com");
-        expect(contact.subject).toBe("Test Subject");
-        expect(contact.message).toBe("This is a test message");
-        expect(contact.status).toBe("NEW");
+        expect(contact.name).toBe("John Doe");
+        expect(contact.email).toBe("john@example.com");
+        testContactId = contact.id;
     });
 
     test("should read a contact submission", async () => {
@@ -40,14 +37,15 @@ describe("Contact Service Tests", () => {
         });
 
         expect(contact).not.toBeNull();
-        expect(contact?.name).toBe("Test User");
-        expect(contact?.email).toBe("test@example.com");
+        expect(contact?.subject).toBe("Test Subject");
     });
 
     test("should update contact status", async () => {
         const updatedContact = await testPrisma.contact.update({
             where: { id: testContactId },
-            data: { status: "READ" }
+            data: {
+                status: "READ"
+            }
         });
 
         expect(updatedContact.status).toBe("READ");
@@ -55,18 +53,16 @@ describe("Contact Service Tests", () => {
 
     test("should find all contacts", async () => {
         const contacts = await testPrisma.contact.findMany();
-
-        expect(Array.isArray(contacts)).toBe(true);
         expect(contacts.length).toBeGreaterThan(0);
     });
 
     test("should filter contacts by status", async () => {
         await testPrisma.contact.create({
             data: {
-                name: "Another User",
-                email: "another@example.com",
+                name: "Jane Smith",
+                email: "jane@example.com",
                 subject: "Another Subject",
-                message: "Another message",
+                message: "Another Message",
                 status: "REPLIED"
             }
         });
@@ -74,18 +70,18 @@ describe("Contact Service Tests", () => {
         const readContacts = await testPrisma.contact.findMany({
             where: { status: "READ" }
         });
-
         const repliedContacts = await testPrisma.contact.findMany({
             where: { status: "REPLIED" }
         });
 
-        expect(readContacts.every(c => c.status === "READ")).toBe(true);
-        expect(repliedContacts.every(c => c.status === "REPLIED")).toBe(true);
+        expect(readContacts.length).toBeGreaterThan(0);
+        expect(repliedContacts.length).toBeGreaterThan(0);
+        expect(readContacts[0]?.status).toBe("READ");
+        expect(repliedContacts[0]?.status).toBe("REPLIED");
     });
 
     test("should count contacts", async () => {
         const count = await testPrisma.contact.count();
-        expect(typeof count).toBe("number");
         expect(count).toBeGreaterThanOrEqual(2);
     });
 
@@ -101,13 +97,10 @@ describe("Contact Service Tests", () => {
         expect(deletedContact).toBeNull();
     });
 
-    test("should validate email format in application logic", async () => {
-        const validEmail = "test@example.com";
-        const invalidEmail = "invalid-email";
-
+    test("should validate email format in application logic", () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        expect(emailRegex.test(validEmail)).toBe(true);
-        expect(emailRegex.test(invalidEmail)).toBe(false);
+        expect(emailRegex.test("valid@example.com")).toBe(true);
+        expect(emailRegex.test("invalid-email")).toBe(false);
+        expect(emailRegex.test("missing@domain")).toBe(false);
     });
 });

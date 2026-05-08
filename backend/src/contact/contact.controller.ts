@@ -1,6 +1,6 @@
 import Elysia from "elysia";
-import { ContactService } from "./contact.service";
-import { contactModels } from "./contact.model";
+import { ContactService } from "./contact.service.js";
+import { contactModels } from "./contact.model.js";
 import jwt from "@elysiajs/jwt";
 
 async function verifyTurnstileToken(token: string, remoteIp: string): Promise<boolean> {

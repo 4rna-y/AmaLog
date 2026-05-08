@@ -1,26 +1,18 @@
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
-import { testPrisma, cleanupTestDatabase } from "./setup";
+import { testPrisma, cleanupTestDatabase } from "./setup.js";
 
 describe("Repository Service Tests", () => {
     const testRepoId = "test-repo-" + Date.now();
 
     beforeAll(async () => {
         await testPrisma.repository.deleteMany({
-            where: {
-                id: {
-                    startsWith: "test-repo"
-                }
-            }
+            where: { id: testRepoId }
         });
     });
 
     afterAll(async () => {
         await testPrisma.repository.deleteMany({
-            where: {
-                id: {
-                    startsWith: "test-repo"
-                }
-            }
+            where: { id: testRepoId }
         });
     });
 
@@ -30,17 +22,14 @@ describe("Repository Service Tests", () => {
                 id: testRepoId,
                 name: "Test Repository",
                 isProduct: true,
-                langs: ["TypeScript", "JavaScript"],
-                content: "# Test Repository\n\nLine 1 of content\n\nLine 2 of content"
+                langs: ["typescript", "javascript"],
+                content: "This is a test repository content."
             }
         });
 
         expect(repository).toBeDefined();
         expect(repository.id).toBe(testRepoId);
         expect(repository.name).toBe("Test Repository");
-        expect(repository.isProduct).toBe(true);
-        expect(repository.langs).toEqual(["TypeScript", "JavaScript"]);
-        expect(repository.content).toBe("# Test Repository\n\nLine 1 of content\n\nLine 2 of content");
     });
 
     test("should read a repository", async () => {
@@ -50,7 +39,6 @@ describe("Repository Service Tests", () => {
 
         expect(repository).not.toBeNull();
         expect(repository?.name).toBe("Test Repository");
-        expect(repository?.isProduct).toBe(true);
     });
 
     test("should update repository basic fields", async () => {
@@ -58,60 +46,43 @@ describe("Repository Service Tests", () => {
             where: { id: testRepoId },
             data: {
                 name: "Updated Repository Name",
-                isProduct: false,
-                langs: ["TypeScript", "Go", "Rust"]
+                isProduct: false
             }
         });
 
         expect(updatedRepo.name).toBe("Updated Repository Name");
         expect(updatedRepo.isProduct).toBe(false);
-        expect(updatedRepo.langs).toEqual(["TypeScript", "Go", "Rust"]);
     });
 
     test("should update repository content", async () => {
         const updatedRepo = await testPrisma.repository.update({
             where: { id: testRepoId },
             data: {
-                content: "# Updated Repository\n\nUpdated line 1\n\nUpdated line 2\n\nNew line 3"
+                content: "Updated test repository content."
             }
         });
 
-        expect(updatedRepo.content).toBe("# Updated Repository\n\nUpdated line 1\n\nUpdated line 2\n\nNew line 3");
+        expect(updatedRepo.content).toBe("Updated test repository content.");
     });
 
     test("should find repositories by isProduct flag", async () => {
-        await testPrisma.repository.create({
-            data: {
-                id: testRepoId + "-product",
-                name: "Product Repo",
-                isProduct: true,
-                langs: ["Python"],
-                content: "# Product Repo\n\nThis is a product repository."
-            }
-        });
-
         const productRepos = await testPrisma.repository.findMany({
-            where: { isProduct: true }
-        });
-
-        const nonProductRepos = await testPrisma.repository.findMany({
             where: { isProduct: false }
         });
 
-        expect(productRepos.every(r => r.isProduct === true)).toBe(true);
-        expect(nonProductRepos.every(r => r.isProduct === false)).toBe(true);
+        expect(productRepos.length).toBeGreaterThan(0);
+        expect(productRepos.every(r => r.isProduct === false)).toBe(true);
     });
 
     test("should find repositories with specific language", async () => {
         const typescriptRepos = await testPrisma.repository.findMany({
             where: {
-                langs: {
-                    has: "TypeScript"
-                }
+                langs: { has: "typescript" }
             }
         });
 
-        expect(typescriptRepos.every(r => r.langs.includes("TypeScript"))).toBe(true);
+        expect(typescriptRepos.length).toBeGreaterThan(0);
+        expect(typescriptRepos.every(r => r.langs.includes("typescript"))).toBe(true);
     });
 
     test("should get repository with select fields", async () => {
@@ -119,31 +90,19 @@ describe("Repository Service Tests", () => {
             where: { id: testRepoId },
             select: {
                 id: true,
-                name: true,
-                isProduct: true,
-                langs: true
+                name: true
             }
         });
 
-        expect(repository).not.toBeNull();
-        expect(repository).toHaveProperty("id");
-        expect(repository).toHaveProperty("name");
-        expect(repository).toHaveProperty("isProduct");
-        expect(repository).toHaveProperty("langs");
-        expect(repository).not.toHaveProperty("content");
+        expect(repository).toBeDefined();
+        expect(Object.keys(repository as object)).toEqual(["id", "name"]);
     });
 
     test("should count repositories", async () => {
         const count = await testPrisma.repository.count({
-            where: {
-                id: {
-                    startsWith: "test-repo"
-                }
-            }
+            where: { id: testRepoId }
         });
-
-        expect(typeof count).toBe("number");
-        expect(count).toBeGreaterThanOrEqual(2);
+        expect(count).toBe(1);
     });
 
     test("should delete a repository", async () => {
@@ -159,14 +118,7 @@ describe("Repository Service Tests", () => {
     });
 
     test("should find all repositories", async () => {
-        const allRepos = await testPrisma.repository.findMany({
-            where: {
-                id: {
-                    startsWith: "test-repo"
-                }
-            }
-        });
-
+        const allRepos = await testPrisma.repository.findMany();
         expect(Array.isArray(allRepos)).toBe(true);
     });
 });

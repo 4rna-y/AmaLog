@@ -1,7 +1,7 @@
 import Elysia, { status } from "elysia";
 import jwt from "@elysiajs/jwt"
-import { AuthService } from "./auth.service";
-import { AuthModule } from "./auth.module";
+import { AuthService } from "./auth.service.js";
+import { AuthModule } from "./auth.module.js";
 
 export const authController = new Elysia()
     .decorate({ authService: AuthService, authModule: AuthModule })

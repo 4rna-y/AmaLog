@@ -1,7 +1,7 @@
 import Elysia from "elysia";
-import { KeyValuePairService } from "./kv.service";
-import { AuthModule } from "../auth/auth.module";
-import { kvModel } from "./kv.model";
+import { KeyValuePairService } from "./kv.service.js";
+import { AuthModule } from "../auth/auth.module.js";
+import { kvModel } from "./kv.model.js";
 import jwt from "@elysiajs/jwt";
 
 export const kvController = new Elysia()

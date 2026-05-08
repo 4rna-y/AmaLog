@@ -1,7 +1,7 @@
 import jwt from "@elysiajs/jwt";
 import Elysia, { NotFoundError } from "elysia";
-import { imgModels } from "./img.model";
-import { ImgService } from "./img.service";
+import { imgModels } from "./img.model.js";
+import { ImgService } from "./img.service.js";
 
 const uploadsPath = process.env.NODE_ENV === "production" ? "/app/uploads" : "./uploads";
 

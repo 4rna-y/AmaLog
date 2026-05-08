@@ -1,7 +1,7 @@
 import jwt from "@elysiajs/jwt";
 import Elysia from "elysia";
-import { RepositoryService } from "./repos.service";
-import { reposModel } from "./repos.model";
+import { RepositoryService } from "./repos.service.js";
+import { reposModel } from "./repos.model.js";
 
 export const reposController = new Elysia()
     .use(reposModel)

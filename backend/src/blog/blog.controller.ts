@@ -1,7 +1,7 @@
 import Elysia from "elysia";
-import { BlogService } from "./blog.service";
+import { BlogService } from "./blog.service.js";
 import jwt from "@elysiajs/jwt";
-import { blogModels } from "./blog.model";
+import { blogModels } from "./blog.model.js";
 
 export const blogController = new Elysia()
     .use(blogModels)

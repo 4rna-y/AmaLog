@@ -1,11 +1,11 @@
 import swagger from "@elysiajs/swagger";
 import { Elysia } from "elysia";
-import { blogController } from "./blog/blog.controller";
-import { authController } from "./auth/auth.controller";
-import { imgController } from "./img/img.controller";
-import { kvController } from "./keyvalue/kv.controller";
-import { reposController } from "./repository/repos.controller";
-import { contactController } from "./contact/contact.controller";
+import { blogController } from "./blog/blog.controller.js";
+import { authController } from "./auth/auth.controller.js";
+import { imgController } from "./img/img.controller.js";
+import { kvController } from "./keyvalue/kv.controller.js";
+import { reposController } from "./repository/repos.controller.js";
+import { contactController } from "./contact/contact.controller.js";
 import { rateLimit } from "elysia-rate-limit";
 import cors from "@elysiajs/cors";
 

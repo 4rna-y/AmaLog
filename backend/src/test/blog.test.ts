@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
-import { testPrisma, cleanupTestDatabase } from "./setup";
+import { testPrisma, cleanupTestDatabase } from "./setup.js";
 
 describe("Blog Service Tests", () => {
     const testBlogId = "test-blog-" + Date.now();

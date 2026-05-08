@@ -2,7 +2,6 @@ import { prisma } from '../src/prisma.js';
 
 async function main() {
   console.log('Start seeding...');
-...
 
   await prisma.blog.deleteMany({});
 
