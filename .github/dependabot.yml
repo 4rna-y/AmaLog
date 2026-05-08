@@ -5,43 +5,23 @@ updates:
     directory: "/backend"
     schedule:
       interval: "daily"
-    groups:
-      "backend-dependencies":
-        patterns:
-          - "*"
 
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "daily"
-    groups:
-      "frontend-dependencies":
-        patterns:
-          - "*"
 
   - package-ecosystem: "docker-compose"
     directory: "/"
     schedule:
       interval: "daily"
-    groups:
-      "docker-dependencies":
-        patterns:
-          - "*"
 
   - package-ecosystem: "docker"
     directory: "/.devcontainer"
     schedule:
       interval: "daily"
-    groups:
-      "docker-dependencies":
-        patterns:
-          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      "github-actions-dependencies":
-        patterns:
-          - "*"
