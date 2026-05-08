@@ -1,20 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 import { execSync } from "child_process";
 
 const testDatabaseUrl = process.env.DATABASE_URL || "postgresql://user:postgres@db:5432/mydb_test";
 process.env.DATABASE_URL = testDatabaseUrl;
 
-export const testPrisma = new PrismaClient({
-    datasources: {
-        db: {
-            url: testDatabaseUrl
-        }
-    }
-});
+const testPool = new pg.Pool({ connectionString: testDatabaseUrl });
+const testAdapter = new PrismaPg(testPool);
+
+export const testPrisma = new PrismaClient({ adapter: testAdapter });
 
 export async function setupTestDatabase() {
     try {
-        execSync(`DATABASE_URL=${testDatabaseUrl} bunx prisma db push`, {
+        execSync(`DATABASE_URL=${testDatabaseUrl} bun x prisma db push`, {
             stdio: "inherit"
         });
         console.log("Test database setup completed");
@@ -41,4 +40,5 @@ export async function cleanupTestDatabase() {
 
 export async function disconnectTestDatabase() {
     await testPrisma.$disconnect();
+    await testPool.end();
 }

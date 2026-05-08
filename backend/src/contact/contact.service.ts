@@ -1,6 +1,6 @@
 import { Cookie, status } from "elysia";
 import { ContactResponse, SubmitContactDto } from "./contact.model";
-import { prisma } from "../prisma";
+import { prisma } from "../prisma.js";
 import { AuthModule } from "../auth/auth.module";
 
 export const ContactService = {

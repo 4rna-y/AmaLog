@@ -1,9 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '../src/prisma.js';
 
 async function main() {
   console.log('Start seeding...');
+...
 
   await prisma.blog.deleteMany({});
 

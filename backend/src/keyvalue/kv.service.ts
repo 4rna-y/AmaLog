@@ -1,7 +1,7 @@
 import { Cookie, status } from "elysia";
 import { AuthModule } from "../auth/auth.module";
 import { GetDto, SetDto } from "./kv.model";
-import { prisma } from "../prisma";
+import { prisma } from "../prisma.js";
 
 export const KeyValuePairService = {
     async getAll(jwt: any, auth: Cookie<unknown>) {
@@ -40,7 +40,7 @@ export const KeyValuePairService = {
         }
 
         try {
-            console.log(`KeyValue set: Validating input - key="${param.key}", value length=${param.value.length}`);
+            console.log(`KeyValue set: Validating input - key="${param.key}" , value length=${param.value.length}`);
 
             if (!param.key || param.key.trim() === "") {
                 console.error("Error: KeyValue set failed - Key is empty");
@@ -90,3 +90,4 @@ export const KeyValuePairService = {
         }
     }
 } 
+ 

@@ -1,5 +1,5 @@
 import { Cookie, status } from "elysia";
-import { prisma } from "../prisma"
+import { prisma } from "../prisma.js"
 import { GetRepositoryDto, PatchRepositoryDto, PostRepositoryDto } from "./repos.model";
 import { AuthModule } from "../auth/auth.module";
 
