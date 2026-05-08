@@ -56,7 +56,7 @@ Ama-Log は、Next.js (Frontend) と ElysiaJS (Backend) を組み合わせた、
 ├── nginx/              # Nginx 設定 (リバースプロキシ, SSL, ボットフィルタ)
 ├── .devcontainer/      # 開発コンテナ設定
 ├── .github/workflows/  # CI/CD パイプライン
-├── docker-compose.prod.yml # 本番環境用構成
+├── docker-compose-prod.yml # 本番環境用構成
 └── init-ssl.sh         # 初回SSL証明書取得スクリプト
 ```
 
@@ -102,7 +102,7 @@ GitHub の `main` ブランチに push され、CI (Frontend Build/Lint, Backend
 本番サーバー上で以下のコマンドを実行します。
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose-prod.yml up -d --build
 ```
 
 初回のみ SSL 証明書取得のために `./init-ssl.sh <your-email>` を実行する必要があります。

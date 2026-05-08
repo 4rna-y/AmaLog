@@ -24,6 +24,6 @@ jobs:
           script: |
             cd ${{ secrets.VPS_PROJECT_PATH }}
             git pull origin main
-            docker compose -f docker-compose.prod.yml up --build -d --force-recreate
+            docker compose -f docker-compose-prod.yml up --build -d --force-recreate
             docker exec production-backend bunx prisma migrate deploy
             docker exec production-backend bunx prisma generate
