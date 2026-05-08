@@ -22,7 +22,7 @@
     "prismabox": "^1.1.25",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "satori": "^0.18.3"
+    "satori": "^0.26.0"
   },
   "devDependencies": {
     "bun-types": "latest",
