@@ -14,7 +14,7 @@ export const testPrisma = new PrismaClient({
 
 export async function setupTestDatabase() {
     try {
-        execSync(`cd /workspace/backend && DATABASE_URL=${testDatabaseUrl} bunx prisma db push --skip-generate`, {
+        execSync(`DATABASE_URL=${testDatabaseUrl} bunx prisma db push`, {
             stdio: "inherit"
         });
         console.log("Test database setup completed");

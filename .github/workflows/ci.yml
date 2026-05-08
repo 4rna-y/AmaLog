@@ -69,7 +69,7 @@ jobs:
         run: bun install
 
       - name: Setup database schema
-        run: bunx prisma db push --skip-generate
+        run: bunx prisma db push
 
       - name: Run tests
         run: bun test
