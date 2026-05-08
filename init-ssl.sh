@@ -2,9 +2,10 @@
 
 EMAIL=$1
 
+# webroot 方式に変更 (Nginx が起動している前提)
 sudo certbot certonly \
-  --standalone \
-  --preferred-challenges http \
+  --webroot \
+  -w /var/www/certbot \
   --email $EMAIL \
   --agree-tos \
   --no-eff-email \
