@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from "bun:test";
-import { app } from "../index";
 import { testPrisma, cleanupTestDatabase } from "./setup.js";
+import { app } from "../index";
 
 describe("API Integration Tests", () => {
     beforeAll(async () => {

@@ -8,7 +8,7 @@ export const AuthModule = {
         const payload = await jwt.verify(token);
         if (!payload) return false;
         
-        if (payload.email !== process.env.ADMIN_EMAIL) return {};
+        if (payload.email !== process.env.ADMIN_EMAIL) return false;
 
         return true;
     },

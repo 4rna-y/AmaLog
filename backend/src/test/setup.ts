@@ -6,6 +6,7 @@ import { execSync } from "child_process";
 const testDatabaseUrl = process.env.DATABASE_URL || "postgresql://user:postgres@db:5432/mydb_test";
 process.env.DATABASE_URL = testDatabaseUrl;
 process.env.ADMIN_EMAIL = "admin@example.com";
+process.env.JWT_SECRET = "test-secret";
 
 const testPool = new pg.Pool({ connectionString: testDatabaseUrl });
 const testAdapter = new PrismaPg(testPool);

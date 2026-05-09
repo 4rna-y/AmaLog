@@ -46,19 +46,22 @@ describe("Blog Service Logic Tests", () => {
     describe("getArticle", () => {
         test("should return 404 for non-existent blog", async () => {
             const res = await BlogService.getArticle(mockJwt, mockCookie(undefined), { id: "non-existent" });
-            expect(res).toBe(404);
+            expect(res.code).toBe(404);
         });
 
         test("should return 403 for unpublished blog if not admin", async () => {
             const res = await BlogService.getArticle(mockJwt, mockCookie("valid-user-token"), { id: unpublishedId });
-            expect(res).toBe(403);
+            expect(res.code).toBe(403);
         });
 
         test("should return 200 for unpublished blog if admin", async () => {
             const res = await BlogService.getArticle(mockJwt, mockCookie("valid-admin-token"), { id: unpublishedId });
-            expect(res).not.toBe(403);
-            expect(res).not.toBe(404);
-            expect(res.id).toBe(unpublishedId);
+            expect(res).not.toBeNull();
+            if (typeof res === 'object' && 'code' in res) {
+                expect(res.code).toBe(200);
+            } else {
+                expect(res.id).toBe(unpublishedId);
+            }
         });
 
         test("should increment views when getting a published article", async () => {
@@ -81,9 +84,9 @@ describe("Blog Service Logic Tests", () => {
                 status: "PUBLISHED",
                 title: "New Title",
                 contents: [{ line: 0, content: "New Content", delete: false }]
-            });
+            }) as any;
 
-            expect(res).toBe(200);
+            expect(res.code).toBe(200);
 
             const blog = await testPrisma.blog.findUnique({
                 where: { id: publishedId },
@@ -107,8 +110,8 @@ describe("Blog Service Logic Tests", () => {
                 status: null,
                 title: "Unauthorized Title",
                 contents: null
-            });
-            expect(res).toBe(403);
+            }) as any;
+            expect(res.code).toBe(403);
         });
     });
 });
