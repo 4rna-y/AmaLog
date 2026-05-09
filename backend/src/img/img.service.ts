@@ -5,19 +5,39 @@ import { prisma } from "../prisma.js"
 import satori from "satori";
 import { imgSvgNode } from "./img.svg.js";
 import { Resvg } from "@resvg/resvg-js";
-import { readdirSync, statSync } from "fs";
+import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
-const mime2Ext: Record<string, string> = {
-    "image/jpeg": ".jpg",
-    "image/png": ".png",
-    "image/gif": ".gif",
-    "image/webp": ".webp",
-    "image/avif": ".avif"
-}
+const s3 = new S3Client({
+    region: "auto",
+    endpoint: process.env.R2_ENDPOINT,
+    credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+    },
+});
 
-const uploadsPath = process.env.NODE_ENV === "production" ? "/app/uploads" : "./uploads";
+const bucketName = process.env.R2_BUCKET_NAME!;
 
 export const ImgService = {
+    async get(id: string) {
+        try {
+            const response = await s3.send(new GetObjectCommand({
+                Bucket: bucketName,
+                Key: id,
+            }));
+
+            if (!response.Body) return null;
+
+            return {
+                data: response.Body,
+                contentType: response.ContentType
+            };
+        } catch (err) {
+            console.error(`Failed to get img ${id} from R2: `, err);
+            return null;
+        }
+    },
+
     async post(jwt: any, auth: Cookie<unknown>, query: GetImgDto, body: PostImgDto) {
         const res = await AuthModule.verify(jwt, auth);
         if (!res) return status(403);
@@ -25,10 +45,15 @@ export const ImgService = {
 
         try {
             const buf = await body.image.arrayBuffer();
-            await Bun.write(`${uploadsPath}/${query.id}`, buf, { createPath: true /*わあ！*/ });
+            await s3.send(new PutObjectCommand({
+                Bucket: bucketName,
+                Key: query.id,
+                Body: Buffer.from(buf),
+                ContentType: body.image.type,
+            }));
         }
         catch (err) {
-            console.error("Failed to save img: ", err);
+            console.error("Failed to save img to R2: ", err);
             return status(500);
         }
 
@@ -70,7 +95,19 @@ export const ImgService = {
             fitTo: { mode: "width", value: 1200 }
         });
 
-        await Bun.write(`${uploadsPath}/${blog.coverImgId}`, resvg.render().asPng(), { createPath: true });
+        const pngBuffer = resvg.render().asPng();
+
+        try {
+            await s3.send(new PutObjectCommand({
+                Bucket: bucketName,
+                Key: blog.coverImgId,
+                Body: pngBuffer,
+                ContentType: "image/png",
+            }));
+        } catch (err) {
+            console.error("Failed to upload blog cover to R2: ", err);
+            return status(500);
+        }
 
         return status(200);
     },
@@ -89,11 +126,17 @@ export const ImgService = {
             if (!imageResponse.ok) return status(500);
 
             const imageBuffer = await imageResponse.arrayBuffer();
-            await Bun.write(`${uploadsPath}/${body.repositoryId}.png`, imageBuffer, { createPath: true });
+            
+            await s3.send(new PutObjectCommand({
+                Bucket: bucketName,
+                Key: `${body.repositoryId}.png`,
+                Body: Buffer.from(imageBuffer),
+                ContentType: "image/png",
+            }));
 
             return status(200);
         } catch (err) {
-            console.error("Failed to fetch GitHub OGP image: ", err);
+            console.error("Failed to fetch/upload GitHub OGP image to R2: ", err);
             return status(500);
         }
     }

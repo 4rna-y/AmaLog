@@ -9,15 +9,25 @@ export const imgController = new Elysia()
     .use(jwt({ name: "jwt", secret: process.env.JWT_SECRET!! }))
     .use(imgModels)
     .decorate({ "img": ImgService })
-    .get("/static/*", async ({ params }) => {
+    .get("/static/*", async ({ params, img, set }) => {
         const filePath = (params as any)['*'];
-        const file = Bun.file(`${uploadsPath}/${filePath}`);
-
-        if (!(await file.exists())) {
-            throw new NotFoundError();
+        
+        // Try R2 first
+        const image = await img.get(filePath);
+        if (image) {
+            if (image.contentType) {
+                set.headers['Content-Type'] = image.contentType;
+            }
+            return image.data;
         }
 
-        return file;
+        // Fallback to local (for existing images not yet migrated)
+        const file = Bun.file(`${uploadsPath}/${filePath}`);
+        if (await file.exists()) {
+            return file;
+        }
+
+        throw new NotFoundError();
     })
     .post("/img", async ({ img, jwt, cookie: { auth }, query, body }) =>
         await img.post(jwt, auth, query, body),
