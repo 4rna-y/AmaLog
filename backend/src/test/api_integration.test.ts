@@ -33,8 +33,8 @@ describe("API Integration Tests", () => {
         expect(body.status).toBe("ok");
     });
 
-    test("GET /blog should return list of thumbnails", async () => {
-        const response = await app.handle(new Request("http://localhost/blog?page=1&amount=10"));
+    test("GET /blogs should return list of thumbnails", async () => {
+        const response = await app.handle(new Request("http://localhost/blogs?page=1&amount=10"));
         expect(response.status).toBe(200);
         const body = await response.json();
         expect(body.thumbnails).toBeDefined();
@@ -42,8 +42,8 @@ describe("API Integration Tests", () => {
         expect(body.thumbnails[0].id).toBe("api-test-blog");
     });
 
-    test("GET /blog/:id should return the article and increment views", async () => {
-        const response = await app.handle(new Request("http://localhost/blog/api-test-blog"));
+    test("GET /blog/article should return the article and increment views", async () => {
+        const response = await app.handle(new Request("http://localhost/blog/article?id=api-test-blog"));
         expect(response.status).toBe(200);
         const body = await response.json();
         expect(body.id).toBe("api-test-blog");
@@ -54,8 +54,8 @@ describe("API Integration Tests", () => {
         expect(blog?.views).toBe(1);
     });
 
-    test("GET /blog/:id should return 404 for non-existent blog", async () => {
-        const response = await app.handle(new Request("http://localhost/blog/non-existent"));
+    test("GET /blog/article should return 404 for non-existent blog", async () => {
+        const response = await app.handle(new Request("http://localhost/blog/article?id=non-existent"));
         expect(response.status).toBe(404);
     });
 });
