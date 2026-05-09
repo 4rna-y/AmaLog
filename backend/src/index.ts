@@ -29,7 +29,7 @@ const BLOCKED_USER_AGENTS = [
   'YandexImages',         
 ];
 
-const app = new Elysia()
+export const app = new Elysia()
   .onBeforeHandle(({ request, set }) => {
     const userAgent = request.headers.get('user-agent') || '';
 
@@ -57,7 +57,10 @@ const app = new Elysia()
   .use(imgController)
   .use(kvController)
   .use(reposController)
-  .use(contactController)
-  .listen(8000);
+  .use(contactController);
+
+if (process.env.NODE_ENV !== "test") {
+  app.listen(8000);
+}
 
 
