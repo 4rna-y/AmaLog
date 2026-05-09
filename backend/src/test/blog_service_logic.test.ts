@@ -1,5 +1,6 @@
-import { describe, test, expect, beforeAll, afterAll } from "bun:test";
+import { describe, test, expect, beforeAll, afterAll, spyOn } from "bun:test";
 import { BlogService } from "../blog/blog.service";
+import { AuthModule } from "../auth/auth.module";
 import { testPrisma, cleanupTestDatabase } from "./setup.js";
 import { mockJwt, mockCookie } from "./mock_utils";
 
@@ -50,17 +51,29 @@ describe("Blog Service Logic Tests", () => {
         });
 
         test("should return 403 for unpublished blog if not admin", async () => {
-            const res = await BlogService.getArticle(mockJwt, mockCookie("valid-user-token"), { id: unpublishedId });
-            expect(res.code).toBe(403);
+            const verifySpy = spyOn(AuthModule, "verify").mockImplementation(async () => false);
+            
+            try {
+                const res = await BlogService.getArticle(mockJwt, mockCookie("valid-user-token"), { id: unpublishedId });
+                expect(res.code).toBe(403);
+            } finally {
+                verifySpy.mockRestore();
+            }
         });
 
         test("should return 200 for unpublished blog if admin", async () => {
-            const res = await BlogService.getArticle(mockJwt, mockCookie("valid-admin-token"), { id: unpublishedId });
-            expect(res).not.toBeNull();
-            if (typeof res === 'object' && 'code' in res) {
-                expect(res.code).toBe(200);
-            } else {
-                expect(res.id).toBe(unpublishedId);
+            const verifySpy = spyOn(AuthModule, "verify").mockImplementation(async () => true);
+
+            try {
+                const res = await BlogService.getArticle(mockJwt, mockCookie("valid-admin-token"), { id: unpublishedId });
+                expect(res).not.toBeNull();
+                if (typeof res === 'object' && 'code' in res) {
+                    expect(res.code).toBe(200);
+                } else {
+                    expect(res.id).toBe(unpublishedId);
+                }
+            } finally {
+                verifySpy.mockRestore();
             }
         });
 
@@ -74,44 +87,56 @@ describe("Blog Service Logic Tests", () => {
 
     describe("patch", () => {
         test("should create a blogUpdate record when content is updated", async () => {
-            const updateTitle = "Update Title " + Date.now();
-            const res = await BlogService.patch(mockJwt, mockCookie("valid-admin-token"), {
-                id: publishedId,
-                updateTitle: updateTitle,
-                category: "New Category",
-                tag: ["new-tag"],
-                coverImgId: "new-img",
-                status: "PUBLISHED",
-                title: "New Title",
-                contents: [{ line: 0, content: "New Content", delete: false }]
-            }) as any;
+            const verifySpy = spyOn(AuthModule, "verify").mockImplementation(async () => true);
 
-            expect(res.code).toBe(200);
+            try {
+                const updateTitle = "Update Title " + Date.now();
+                const res = await BlogService.patch(mockJwt, mockCookie("valid-admin-token"), {
+                    id: publishedId,
+                    updateTitle: updateTitle,
+                    category: "New Category",
+                    tag: ["new-tag"],
+                    coverImgId: "new-img",
+                    status: "PUBLISHED",
+                    title: "New Title",
+                    contents: [{ line: 0, content: "New Content", delete: false }]
+                }) as any;
 
-            const blog = await testPrisma.blog.findUnique({
-                where: { id: publishedId },
-                include: { blogUpdate: { include: { contents: true } } }
-            });
+                expect(res.code).toBe(200);
 
-            expect(blog?.title).toBe("New Title");
-            expect(blog?.blogUpdate.length).toBeGreaterThan(0);
-            const latestUpdate = blog?.blogUpdate.find(u => u.title === updateTitle);
-            expect(latestUpdate).toBeDefined();
-            expect(latestUpdate?.contents.length).toBeGreaterThan(0);
+                const blog = await testPrisma.blog.findUnique({
+                    where: { id: publishedId },
+                    include: { blogUpdate: { include: { contents: true } } }
+                });
+
+                expect(blog?.title).toBe("New Title");
+                expect(blog?.blogUpdate.length).toBeGreaterThan(0);
+                const latestUpdate = blog?.blogUpdate.find(u => u.title === updateTitle);
+                expect(latestUpdate).toBeDefined();
+                expect(latestUpdate?.contents.length).toBeGreaterThan(0);
+            } finally {
+                verifySpy.mockRestore();
+            }
         });
 
         test("should return 403 if not admin", async () => {
-            const res = await BlogService.patch(mockJwt, mockCookie("valid-user-token"), {
-                id: publishedId,
-                updateTitle: "Unauthorized Update",
-                category: null,
-                tag: null,
-                coverImgId: null,
-                status: null,
-                title: "Unauthorized Title",
-                contents: null
-            }) as any;
-            expect(res.code).toBe(403);
+            const verifySpy = spyOn(AuthModule, "verify").mockImplementation(async () => false);
+
+            try {
+                const res = await BlogService.patch(mockJwt, mockCookie("valid-user-token"), {
+                    id: publishedId,
+                    updateTitle: "Unauthorized Update",
+                    category: null,
+                    tag: null,
+                    coverImgId: null,
+                    status: null,
+                    title: "Unauthorized Title",
+                    contents: null
+                }) as any;
+                expect(res.code).toBe(403);
+            } finally {
+                verifySpy.mockRestore();
+            }
         });
     });
 });
