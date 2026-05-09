@@ -110,12 +110,12 @@ export default async function BlogPage({params}: {params: {id: string}}) {
         "author": {
             "@type": "Person",
             "name": "Ama",
-            "url": "https://arnay.net"
+            "url": "https://4rnay.net"
         },
         "publisher": {
             "@type": "Organization",
             "name": "Ama-Log",
-            "url": "https://arnay.net",
+            "url": "https://4rnay.net",
             "logo": {
                 "@type": "ImageObject",
                 "url": `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT}/static/site-log.png`
@@ -125,7 +125,7 @@ export default async function BlogPage({params}: {params: {id: string}}) {
         "keywords": blog.tag.join(", "),
         "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": `https://arnay.net/blog/${blog.id}`
+            "@id": `https://4rnay.net/blog/${blog.id}`
         }
     } : null;
 
