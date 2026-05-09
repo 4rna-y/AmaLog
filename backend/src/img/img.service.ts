@@ -7,22 +7,28 @@ import { imgSvgNode } from "./img.svg.js";
 import { Resvg } from "@resvg/resvg-js";
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
-const s3 = new S3Client({
-    region: "auto",
-    endpoint: process.env.R2_ENDPOINT,
-    credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-    },
-});
+let _s3: S3Client | null = null;
+const getS3 = () => {
+    if (!_s3) {
+        _s3 = new S3Client({
+            region: "auto",
+            endpoint: process.env.R2_ENDPOINT,
+            credentials: {
+                accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+            },
+        });
+    }
+    return _s3;
+};
 
-const bucketName = process.env.R2_BUCKET_NAME!;
+const getBucketName = () => process.env.R2_BUCKET_NAME!;
 
 export const ImgService = {
     async get(id: string) {
         try {
-            const response = await s3.send(new GetObjectCommand({
-                Bucket: bucketName,
+            const response = await getS3().send(new GetObjectCommand({
+                Bucket: getBucketName(),
                 Key: id,
             }));
 
@@ -45,8 +51,8 @@ export const ImgService = {
 
         try {
             const buf = await body.image.arrayBuffer();
-            await s3.send(new PutObjectCommand({
-                Bucket: bucketName,
+            await getS3().send(new PutObjectCommand({
+                Bucket: getBucketName(),
                 Key: query.id,
                 Body: Buffer.from(buf),
                 ContentType: body.image.type,
@@ -98,8 +104,8 @@ export const ImgService = {
         const pngBuffer = resvg.render().asPng();
 
         try {
-            await s3.send(new PutObjectCommand({
-                Bucket: bucketName,
+            await getS3().send(new PutObjectCommand({
+                Bucket: getBucketName(),
                 Key: blog.coverImgId,
                 Body: pngBuffer,
                 ContentType: "image/png",
@@ -127,8 +133,8 @@ export const ImgService = {
 
             const imageBuffer = await imageResponse.arrayBuffer();
             
-            await s3.send(new PutObjectCommand({
-                Bucket: bucketName,
+            await getS3().send(new PutObjectCommand({
+                Bucket: getBucketName(),
                 Key: `${body.repositoryId}.png`,
                 Body: Buffer.from(imageBuffer),
                 ContentType: "image/png",
